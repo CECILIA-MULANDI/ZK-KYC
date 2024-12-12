@@ -10,9 +10,9 @@
 // }
 // for the proof of concept, we take in a string as the doc<input>
 
-use std::io;
+// use std::io;
 
-pub fn submit_docs(mut doc: u32) -> bool {
+pub fn submit_docs(doc: u32) -> bool {
     // assume we are submitting an id
     // parse the doc
     // calculate age

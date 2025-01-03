@@ -50,8 +50,9 @@ fn main() {
     // Set up pk and vk
     let (pk, vk) = client.setup(ZK_KYC);
 
-    let proof = client.prove(&pk, stdin).run().unwrap();
-
+    let mut proof = client.prove(&pk, stdin).run().unwrap();
+    let doc = proof.public_values.read::<u32>();
+    println!("doc: {}", doc);
     println!("Proof generated!");
 
     client

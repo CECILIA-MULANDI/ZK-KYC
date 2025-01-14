@@ -1,7 +1,7 @@
 #![no_main]
 sp1_zkvm::entrypoint!(main);
 
-use fibonacci_lib::submit_docs;
+use fibonacci_lib::{KycUpload,new}
 
 pub fn main() {
     // Read an input to the program.

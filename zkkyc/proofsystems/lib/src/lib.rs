@@ -1,29 +1,45 @@
-// use alloy_sol_types::sol;
+use chrono::NaiveDate;
 
-// sol! {
-//     /// The public values encoded as a struct that can be easily deserialized inside Solidity.
-//     struct PublicValuesStruct {
-//         uint32 n;
-//         uint32 a;
-//         uint32 b;
-//     }
-// }
-// for the proof of concept, we take in a string as the doc<input>
-
-// use std::io;
-
-pub fn submit_docs(doc: u32) -> bool {
-    // assume we are submitting an id
-    // parse the doc
-    // calculate age
-    // if > 18 then legal age
-    // let mut input = String::new();
-    // io::stdin()
-    //     .read_line(&mut input)
-    //     .expect("Could not read the file");
-    // doc = input
-    //     .trim()
-    //     .parse()
-    //     .expect("The value passed should be an integer");
-    doc > 18
+use std::Error;
+pub struct KycUpload {
+    pub name: String,
+    pub date_of_birth: NaiveDate,
+    pub gender: Option<String>,
+    pub signature: String,
+    pub address: String,
+    pub id_number: String,
+    pub id_type: String,
+    pub document_issue_date: NaiveDate,
+    pub document_expiry_date: Option<NaiveDate>,
+}
+impl KycUpload {
+    pub fn new(
+        name: String,
+        dob: String,
+        gender: Option<String>,
+        signature: String,
+        address: String,
+        id_number: String,
+        id_type: String,
+        issue_date: String,
+        expiry_date: Option<String>,
+    ) -> Self {
+        KycUpload {
+            name,
+            date_of_birth: NaiveDate::parse_from_str(&dob, "%Y-%m-%d")
+                .expect("Invalid date format"),
+            gender,
+            signature,
+            address,
+            id_number,
+            id_type,
+            document_issue_date,
+            document_expiry_date,
+            document_issue_date: NaiveDate::parse_from_str(&issue_date, "%Y-%m-%d")
+                .expect("Invalid issue date format"),
+            document_expiry_date: expiry_date.map(|date| {
+                NaiveDate::parse_from_str(&date, "%Y-%m-%d").expect("Invalid expiry date format")
+            }),
+        }
+    }
 }

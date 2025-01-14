@@ -22,14 +22,16 @@ fn main() {
     //create an input stream and write a sample document to it
     let doc: KycUpload = KycUpload {
         name: String::from("Alice Johnson"),
-        date_of_birth: NaiveDate::from_ymd_opt(1990, 5, 15),
+        date_of_birth: NaiveDate::from_ymd_opt(1990, 5, 15).expect("Invalid date of birth"),
         gender: Some(String::from("Female")),
         signature: String::from("c3fcd3d76192e4007dfb496cca67e13b"), // A hashed representation
         address: String::from("123 Blockchain Lane, Crypto City, CC 54321"),
         id_number: String::from("A123456789"),
         id_type: String::from("Passport"),
-        document_issue_date: NaiveDate::from_ymd_opt(2020, 1, 1),
-        document_expiry_date: Some(NaiveDate::from_ymd_opt(2030, 1, 1)),
+        document_issue_date: NaiveDate::from_ymd_opt(2020, 1, 1).expect("Invalid issue date"),
+        document_expiry_date: Some(
+            NaiveDate::from_ymd_opt(2030, 1, 1).expect("Invalid expiry date"),
+        ),
     };
     // write to the std
     let mut stdin = SP1Stdin::new();

@@ -1717,6 +1717,7 @@ name = "fibonacci-script"
 version = "0.1.0"
 dependencies = [
  "alloy-sol-types",
+ "chrono",
  "clap",
  "fibonacci-lib",
  "hex",
@@ -1918,9 +1919,9 @@ dependencies = [
 
 [[package]]
 name = "generic-array"
-version = "1.2.0"
+version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e8c8444bc9d71b935156cc0ccab7f622180808af7867b1daae6547d773591703"
+checksum = "96512db27971c2c3eece70a1e106fbe6c87760234e31e8f7e5634912fe52794a"
 dependencies = [
  "serde",
  "typenum",
@@ -2764,9 +2765,9 @@ dependencies = [
 
 [[package]]
 name = "log"
-version = "0.4.22"
+version = "0.4.25"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a7a70ba024b9dc04c27ea2f0c0548feb474ec5c54bba33a7f72f873a39d07b24"
+checksum = "04cbf5b083de1c7e0222a7a51dbfdba1cbe1c6ab0b15e29fff3f6c077fd9cd9f"
 
 [[package]]
 name = "lru"
@@ -4731,7 +4732,7 @@ dependencies = [
  "bincode",
  "cfg-if",
  "elliptic-curve",
- "generic-array 1.2.0",
+ "generic-array 1.1.0",
  "hashbrown 0.14.5",
  "hex",
  "itertools 0.13.0",
@@ -4779,7 +4780,7 @@ dependencies = [
  "cfg-if",
  "dashu",
  "elliptic-curve",
- "generic-array 1.2.0",
+ "generic-array 1.1.0",
  "itertools 0.13.0",
  "k256",
  "num",

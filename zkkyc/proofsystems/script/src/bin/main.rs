@@ -10,49 +10,38 @@
 //! RUST_LOG=info cargo run --release -- --prove
 //! ```
 
-// use alloy_sol_types::SolType;
-use clap::Parser;
+use chrono::NaiveDate;
+use lib::KycUpload;
 use sp1_sdk::{include_elf, utils, ProverClient, SP1Stdin};
-
 /// The ELF (executable and linkable format) file for the Succinct RISC-V zkVM.
 pub const ZK_KYC: &[u8] = include_elf!("fibonacci-program");
-
-/// The arguments for the command.
-#[derive(Parser, Debug)]
-#[clap(author, version, about, long_about = None)]
-struct Args {
-    #[clap(long)]
-    execute: bool,
-
-    #[clap(long)]
-    prove: bool,
-
-    #[clap(long)]
-    doc: u32,
-}
 
 fn main() {
     // set up logging
     utils::setup_logger();
-    // parse the arguments
-    let args = Args::parse();
+    //create an input stream and write a sample document to it
+    let doc: KycUpload = KycUpload {
+        name: String::from("Alice Johnson"),
+        date_of_birth: NaiveDate::from_ymd_opt(1990, 5, 15),
+        gender: Some(String::from("Female")),
+        signature: String::from("c3fcd3d76192e4007dfb496cca67e13b"), // A hashed representation
+        address: String::from("123 Blockchain Lane, Crypto City, CC 54321"),
+        id_number: String::from("A123456789"),
+        id_type: String::from("Passport"),
+        document_issue_date: NaiveDate::from_ymd_opt(2020, 1, 1),
+        document_expiry_date: Some(NaiveDate::from_ymd_opt(2030, 1, 1)),
+    };
     // write to the std
     let mut stdin = SP1Stdin::new();
-    stdin.write(&args.doc);
-
+    stdin.write(&doc);
     // create prover client
     let client = ProverClient::new();
-    let (_, report) = client.execute(ZK_KYC, stdin.clone()).run().unwrap();
-    println!(
-        "The program executed with {} cycles ",
-        report.total_instruction_count()
-    );
+
     // Set up pk and vk
     let (pk, vk) = client.setup(ZK_KYC);
 
     let mut proof = client.prove(&pk, stdin).run().unwrap();
-    let doc = proof.public_values.read::<u32>();
-    println!("doc: {}", doc);
+
     println!("Proof generated!");
 
     client

@@ -1,6 +1,6 @@
 use chrono::NaiveDate;
-
-use std::Error;
+use serde::{Deserialize, Serialize};
+#[derive(Serialize, Deserialize)]
 pub struct KycUpload {
     pub name: String,
     pub date_of_birth: NaiveDate,
@@ -33,8 +33,7 @@ impl KycUpload {
             address,
             id_number,
             id_type,
-            document_issue_date,
-            document_expiry_date,
+
             document_issue_date: NaiveDate::parse_from_str(&issue_date, "%Y-%m-%d")
                 .expect("Invalid issue date format"),
             document_expiry_date: expiry_date.map(|date| {

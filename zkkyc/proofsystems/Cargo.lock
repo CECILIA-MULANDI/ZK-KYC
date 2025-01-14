@@ -775,6 +775,7 @@ dependencies = [
  "iana-time-zone",
  "js-sys",
  "num-traits",
+ "serde",
  "wasm-bindgen",
  "windows-targets 0.52.6",
 ]
@@ -1698,6 +1699,8 @@ version = "0.1.0"
 dependencies = [
  "alloy-sol-types",
  "chrono",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]

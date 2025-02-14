@@ -1,19 +1,15 @@
 #![no_main]
 sp1_zkvm::entrypoint!(main);
 
-use fibonacci_lib::KycUpload;
+use zk_kyc_lib::{verify_document, Document};
 
 pub fn main() {
     // Read an input to the program.
+    let doc = sp1_zkvm::io::read::<Document>();
+    let current_time = sp1_zkvm::io::read::<u64>();
+    sp1_zkvm::io::commit(&doc);
+    sp1_zkvm::io::commit(&current_time);
 
-    let docs = sp1_zkvm::io::read::<Vec<u8>>();
-
-    // Deserialize using bincode
-    let kyc_docs: Vec<KycUpload> =
-        bincode::deserialize(&docs).expect("Failed to deserialize KYC documents");
-
-    // Process each document
-    for doc in kyc_docs {
-        sp1_zkvm::io::commit(&doc);
-    }
+    let is_valid_res = verify_document(&doc, current_time);
+    sp1_zkvm::io::commit(&is_valid_res)
 }

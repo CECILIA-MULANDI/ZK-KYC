@@ -1,44 +1,15 @@
-use chrono::NaiveDate;
 use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Debug)]
-pub struct KycUpload {
-    pub name: String,
-    pub date_of_birth: NaiveDate,
-    pub gender: Option<String>,
-    pub signature: String,
-    pub address: String,
-    pub id_number: String,
-    pub id_type: String,
-    pub document_issue_date: NaiveDate,
-    pub document_expiry_date: Option<NaiveDate>,
+pub struct Document {
+    pub id: String,
+    pub issuer: String,
+    pub expiry_date: u64,
+    pub issue_date: u64,
 }
-impl KycUpload {
-    pub fn new(
-        name: String,
-        dob: String,
-        gender: Option<String>,
-        signature: String,
-        address: String,
-        id_number: String,
-        id_type: String,
-        issue_date: String,
-        expiry_date: Option<String>,
-    ) -> Self {
-        KycUpload {
-            name,
-            date_of_birth: NaiveDate::parse_from_str(&dob, "%Y-%m-%d")
-                .expect("Invalid date format"),
-            gender,
-            signature,
-            address,
-            id_number,
-            id_type,
+pub fn verify_document(document: &Document, current_time: u64) -> bool {
+    let is_format_valid = !document.id.is_empty() && !document.issuer.is_empty();
+    let dates_valid = document.issue_date < document.expiry_date;
+    let not_expired = document.expiry_date > current_time;
 
-            document_issue_date: NaiveDate::parse_from_str(&issue_date, "%Y-%m-%d")
-                .expect("Invalid issue date format"),
-            document_expiry_date: expiry_date.map(|date| {
-                NaiveDate::parse_from_str(&date, "%Y-%m-%d").expect("Invalid expiry date format")
-            }),
-        }
-    }
+    is_format_valid && dates_valid && not_expired
 }

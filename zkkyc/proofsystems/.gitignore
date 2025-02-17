@@ -17,3 +17,4 @@ pgo-data.profdata
 
 # Env
 .env
+.env.example

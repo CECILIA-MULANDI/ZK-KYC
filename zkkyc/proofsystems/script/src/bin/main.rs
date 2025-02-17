@@ -35,11 +35,14 @@ fn main() {
 
     println!("Executing program...");
     // 3. Execute the program without generating a proof
-    match client.execute(ZK_KYC, &stdin).run() {
-        Ok(res) => println!("The results of the execution are: {:?}", res),
-        Err(e) => {
-            eprintln!("Execution failed: {:?}", e);
-            std::process::exit(1);
-        }
-    }
+    let (_, report) = client.execute(ZK_KYC, &stdin).run().unwrap();
+    println!(
+        "The program executed in {} cycles",
+        report.total_instruction_count()
+    );
+
+    // 4.Generate pkey & vkey
+    let (pk, _vk) = client.setup(ZK_KYC);
+    let proof = client.prove(&pk, &stdin).compressed().run().unwrap();
+    println!("Proof generated :{:?}", proof);
 }

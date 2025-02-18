@@ -1,3 +1,4 @@
+use bincode;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -16,8 +17,11 @@ pub fn verify_document(document: &Document, current_time: u64) -> bool {
 }
 
 pub fn hash_doc(doc: &Document) -> [u8; 32] {
-    let serialized_doc = serde_json::to_vec(doc).expect("Failed to serialize this document!");
+    let serialized_doc = bincode::serialize(doc).expect("Failed to serialize this document!");
     let mut hasher = Sha256::new();
-    hasher.update(serialized_doc);
-    hasher.finalize().into()
+    hasher.update(&serialized_doc);
+    let result = hasher.finalize();
+    let mut hash_array = [0u8; 32];
+    hash_array.copy_from_slice(&result[..32]);
+    hash_array
 }

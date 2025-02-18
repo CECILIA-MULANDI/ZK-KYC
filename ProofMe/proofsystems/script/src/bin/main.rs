@@ -1,4 +1,3 @@
-use bincode;
 use lib::Document;
 use sp1_sdk::{include_elf, utils, ProverClient, SP1Stdin};
 
@@ -59,6 +58,6 @@ fn main() {
         .compressed()
         .run()
         .expect("Failed to generate proof");
-
-    println!("Proof generated successfully: {:?}", proof);
+    client.verify(&proof, &vk).expect("verification failed");
+    println!("Proof generated and verified  successfully!");
 }

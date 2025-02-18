@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import { useState } from "react";
 import { CloudArrowUpIcon } from "@heroicons/react/24/solid";
 import ConnectWallet from "./ConnectWallet";

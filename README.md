@@ -18,7 +18,7 @@ ProofMe is a zero-knowledge (ZK) identity verification system that allows users 
 
 ```sh
 git clone https://github.com/CECILIA-MULANDI/ZK-KYC.git
-cd ProofMe
+cd ZK-KYC/ProofMe
 ```
 
 ### 2. Install Dependencies

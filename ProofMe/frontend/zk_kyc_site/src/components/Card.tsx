@@ -1,12 +1,20 @@
 /* eslint-disable react/no-unescaped-entities */
 import { useState } from "react";
 import { CloudArrowUpIcon } from "@heroicons/react/24/solid";
+import { ethers } from "ethers";
 import ConnectWallet from "./ConnectWallet";
+
+interface WalletData {
+  isConnected: boolean;
+  address: string | null;
+  signer: ethers.Signer | null;
+}
 
 const Card = () => {
   const [isConnecting, setIsConnecting] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
-  const [walletData, setWalletData] = useState({
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [walletData, setWalletData] = useState<WalletData>({
     isConnected: false,
     address: null,
     signer: null,
@@ -39,6 +47,37 @@ const Card = () => {
       alert("An error occurred while connecting. Please try again.");
     } finally {
       setIsConnecting(false);
+    }
+  };
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const allowedTypes = [
+        "application/pdf",
+        "image/jpeg",
+        "image/png",
+        "image/jpg",
+      ];
+      if (!allowedTypes.includes(file.type)) {
+        alert("Please select one of the supported types: PDF,JPEG or PNG");
+        return;
+      }
+      //10MB
+      const maxSize = 10 * 1024 * 1024;
+      if (file.size > maxSize) {
+        alert("File size must be less than 10MB");
+        return;
+      }
+      setSelectedFile(file);
+      console.log("File selected:", file.name);
+    }
+  };
+  const triggerFileInput = () => {
+    const fileInput = document.getElementById(
+      "file-upload"
+    ) as HTMLInputElement;
+    if (fileInput) {
+      fileInput.click();
     }
   };
 
@@ -110,7 +149,29 @@ const Card = () => {
           </h4>
 
           <div className="flex flex-col items-center gap-3 py-2">
-            <CloudArrowUpIcon className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 text-gray-500" />
+            {/* Hidden file input */}
+            <input
+              id="file-upload"
+              type="file"
+              accept=".pdf,.jpg,.jpeg,.png"
+              onChange={handleFileUpload}
+              className="hidden"
+            />
+
+            {/* Clickable upload icon */}
+            <div
+              className="cursor-pointer hover:scale-110 transition-transform duration-200"
+              onClick={triggerFileInput}
+            >
+              <CloudArrowUpIcon className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 text-gray-500 hover:text-gray-700" />
+            </div>
+
+            {/* Show selected file name */}
+            {selectedFile && (
+              <div className="text-sm text-green-600 bg-green-50 px-3 py-1 rounded">
+                📄 {selectedFile.name}
+              </div>
+            )}
 
             <button
               className={`bg-black flex items-center justify-center gap-2 p-2 
@@ -131,7 +192,7 @@ const Card = () => {
                 : "Connect Wallet"}
             </button>
 
-            {walletData.isConnected && (
+            {walletData.isConnected && walletData.address && (
               <span className="text-xs sm:text-sm text-green-600">
                 Connected: {walletData.address.slice(0, 6)}...
                 {walletData.address.slice(-4)}

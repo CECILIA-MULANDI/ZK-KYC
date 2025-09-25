@@ -1,6 +1,12 @@
 import { ethers } from "ethers";
 
-const ConnectWallet = async () => {
+interface ConnectWalletResult {
+  success: boolean;
+  signer: ethers.Signer | null;
+  address: string | null;
+}
+
+const ConnectWallet = async (): Promise<ConnectWalletResult> => {
   try {
     // Check if ethereum object exists
     if (typeof window.ethereum === "undefined") {
@@ -13,10 +19,11 @@ const ConnectWallet = async () => {
       await window.ethereum.request({
         method: "eth_requestAccounts",
       });
-    } catch (requestError) {
+    } catch (requestError: unknown) {
       // Handle user rejection or other request errors
       console.error("Account request error:", requestError);
-      if (requestError.code === 4001) {
+      const error = requestError as { code?: number };
+      if (error.code === 4001) {
         alert("Please connect your MetaMask wallet to continue.");
       } else {
         alert("Failed to connect to MetaMask. Please try again.");
